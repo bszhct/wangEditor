@@ -6,20 +6,20 @@
 export const UA = {
     _ua: navigator.userAgent,
 
-    // 是否 webkit
+  // 是否 webkit
     isWebkit: function () {
         const reg = /webkit/i
         return reg.test(this._ua)
     },
 
-    // 是否 IE
+  // 是否 IE
     isIE: function () {
         return 'ActiveXObject' in window
     }
 }
 
 // 遍历对象
-export function objForEach(obj, fn) {
+export function objForEach (obj, fn) {
     let key, result
     for (key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -32,7 +32,7 @@ export function objForEach(obj, fn) {
 }
 
 // 遍历类数组
-export function arrForEach(fakeArr, fn) {
+export function arrForEach (fakeArr, fn) {
     let i, item, result
     const length = fakeArr.length || 0
     for (i = 0; i < length; i++) {
@@ -45,28 +45,28 @@ export function arrForEach(fakeArr, fn) {
 }
 
 // 获取随机数
-export function getRandom(prefix) {
+export function getRandom (prefix) {
     return prefix + Math.random().toString().slice(2)
 }
 
 // 替换 html 特殊字符
-export function replaceHtmlSymbol(html) {
+export function replaceHtmlSymbol (html) {
     if (html == null) {
         return ''
     }
     return html.replace(/</gm, '&lt;')
-                .replace(/>/gm, '&gt;')
-                .replace(/"/gm, '&quot;')
-                .replace(/(\r\n|\r|\n)/g, '<br/>')
+    .replace(/>/gm, '&gt;')
+    .replace(/"/gm, '&quot;')
+    .replace(/(\r\n|\r|\n)/g, '<br/>')
 }
 
 // 返回百分比的格式
-export function percentFormat(number) {
+export function percentFormat (number) {
     number = (parseInt(number * 100))
     return number + '%'
 }
 
 // 判断是不是 function
-export function isFunction(fn) {
+export function isFunction (fn) {
     return typeof fn === 'function'
 }

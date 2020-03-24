@@ -5,29 +5,30 @@ import $ from '../../util/dom-core.js'
 import DropList from '../droplist.js'
 
 // 构造函数
-function Head(editor) {
+function Head (editor) {
     this.editor = editor
     this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-header"></i></div>')
     this.type = 'droplist'
 
-    // 当前是否 active 状态
+  // 当前是否 active 状态
     this._active = false
 
-    // 初始化 droplist
+  // 初始化 droplist
     this.droplist = new DropList(this, {
-        width: 100,
-        $title: $('<p>设置标题</p>'),
+        width: 60,
+    // $title: $('<p>设置标题</p>'),
+        $title: '',
         type: 'list', // droplist 以列表形式展示
         list: [
-            { $elem: $('<h1>H1</h1>'), value: '<h1>' },
-            { $elem: $('<h2>H2</h2>'), value: '<h2>' },
-            { $elem: $('<h3>H3</h3>'), value: '<h3>' },
-            { $elem: $('<h4>H4</h4>'), value: '<h4>' },
-            { $elem: $('<h5>H5</h5>'), value: '<h5>' },
-            { $elem: $('<p>正文</p>'), value: '<p>' }
+      { $elem: $('<span>H1</span>'), value: '<h1>' },
+      { $elem: $('<span>H2</span>'), value: '<h2>' },
+      { $elem: $('<span>H3</span>'), value: '<h3>' },
+      { $elem: $('<span>H4</span>'), value: '<h4>' },
+      { $elem: $('<span>H5</span>'), value: '<h5>' },
+      { $elem: $('<span>正文</span>'), value: '<p>' }
         ],
         onClick: (value) => {
-            // 注意 this 是指向当前的 Head 对象
+      // 注意 this 是指向当前的 Head 对象
             this._command(value)
         }
     })
@@ -37,22 +38,22 @@ function Head(editor) {
 Head.prototype = {
     constructor: Head,
 
-    // 执行命令
-    _command: function (value) {
+  // 执行命令
+    _command (value) {
         const editor = this.editor
 
         const $selectionElem = editor.selection.getSelectionContainerElem()
         if (editor.$textElem.equal($selectionElem)) {
-            // 不能选中多行来设置标题，否则会出现问题
-            // 例如选中的是 <p>xxx</p><p>yyy</p> 来设置标题，设置之后会成为 <h1>xxx<br>yyy</h1> 不符合预期
+      // 不能选中多行来设置标题，否则会出现问题
+      // 例如选中的是 <p>xxx</p><p>yyy</p> 来设置标题，设置之后会成为 <h1>xxx<br>yyy</h1> 不符合预期
             return
         }
 
         editor.cmd.do('formatBlock', value)
     },
 
-    // 试图改变 active 状态
-    tryChangeActive: function (e) {
+  // 试图改变 active 状态
+    tryChangeActive (e) {
         const editor = this.editor
         const $elem = this.$elem
         const reg = /^h/i

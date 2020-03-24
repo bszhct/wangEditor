@@ -6,7 +6,7 @@ import $ from '../util/dom-core.js'
 import { UA } from '../util/util.js'
 
 // 构造函数
-function API(editor) {
+function API (editor) {
     this.editor = editor
     this._currentRange = null
 }
@@ -15,33 +15,33 @@ function API(editor) {
 API.prototype = {
     constructor: API,
 
-    // 获取 range 对象
-    getRange: function () {
+  // 获取 range 对象
+    getRange () {
         return this._currentRange
     },
 
-    // 保存选区
-    saveRange: function (_range) {
+  // 保存选区
+    saveRange (_range) {
         if (_range) {
-            // 保存已有选区
+      // 保存已有选区
             this._currentRange = _range
             return
         }
 
-        // 获取当前的选区
+    // 获取当前的选区
         const selection = window.getSelection()
         if (selection.rangeCount === 0) {
             return
         }
         const range = selection.getRangeAt(0)
 
-        // 判断选区内容是否在编辑内容之内
+    // 判断选区内容是否在编辑内容之内
         const $containerElem = this.getSelectionContainerElem(range)
         if (!$containerElem) {
             return
         }
 
-        // 判断选区内容是否在不可编辑区域之内
+    // 判断选区内容是否在不可编辑区域之内
         if ($containerElem.attr('contenteditable') === 'false' || $containerElem.parentUntil('[contenteditable=false]')) {
             return
         }
@@ -49,15 +49,15 @@ API.prototype = {
         const editor = this.editor
         const $textElem = editor.$textElem
         if ($textElem.isContain($containerElem)) {
-            // 是编辑内容之内的
+      // 是编辑内容之内的
             this._currentRange = range
         }
     },
 
-    // 折叠选区
-    collapseRange: function (toStart) {
+  // 折叠选区
+    collapseRange (toStart) {
         if (toStart == null) {
-            // 默认为 false
+      // 默认为 false
             toStart = false
         }
         const range = this._currentRange
@@ -66,50 +66,49 @@ API.prototype = {
         }
     },
 
-    // 选中区域的文字
-    getSelectionText: function () {
+  // 选中区域的文字
+    getSelectionText () {
         const range = this._currentRange
         if (range) {
             return this._currentRange.toString()
-        } else {
-            return ''
         }
+        return ''
     },
 
-    // 选区的 $Elem
-    getSelectionContainerElem: function (range) {
+  // 选区的 $Elem
+    getSelectionContainerElem (range) {
         range = range || this._currentRange
         let elem
         if (range) {
             elem = range.commonAncestorContainer
             return $(
-                elem.nodeType === 1 ? elem : elem.parentNode
-            )
+        elem.nodeType === 1 ? elem : elem.parentNode
+      )
         }
     },
-    getSelectionStartElem: function (range) {
+    getSelectionStartElem (range) {
         range = range || this._currentRange
         let elem
         if (range) {
             elem = range.startContainer
             return $(
-                elem.nodeType === 1 ? elem : elem.parentNode
-            )
+        elem.nodeType === 1 ? elem : elem.parentNode
+      )
         }
     },
-    getSelectionEndElem: function (range) {
+    getSelectionEndElem (range) {
         range = range || this._currentRange
         let elem
         if (range) {
             elem = range.endContainer
             return $(
-                elem.nodeType === 1 ? elem : elem.parentNode
-            )
+        elem.nodeType === 1 ? elem : elem.parentNode
+      )
         }
     },
 
-    // 选区是否为空
-    isSelectionEmpty: function () {
+  // 选区是否为空
+    isSelectionEmpty () {
         const range = this._currentRange
         if (range && range.startContainer) {
             if (range.startContainer === range.endContainer) {
@@ -121,36 +120,37 @@ API.prototype = {
         return false
     },
 
-    // 恢复选区
-    restoreSelection: function () {
+  // 恢复选区
+    restoreSelection () {
+    // debugger
         const selection = window.getSelection()
         selection.removeAllRanges()
         selection.addRange(this._currentRange)
     },
 
-    // 创建一个空白（即 &#8203 字符）选区
-    createEmptyRange: function () {
+  // 创建一个空白（即 &#8203 字符）选区
+    createEmptyRange () {
         const editor = this.editor
         const range = this.getRange()
         let $elem
 
         if (!range) {
-            // 当前无 range
+      // 当前无 range
             return
         }
         if (!this.isSelectionEmpty()) {
-            // 当前选区必须没有内容才可以
+      // 当前选区必须没有内容才可以
             return
         }
 
         try {
-            // 目前只支持 webkit 内核
+      // 目前只支持 webkit 内核
             if (UA.isWebkit()) {
-                // 插入 &#8203
+        // 插入 &#8203
                 editor.cmd.do('insertHTML', '&#8203;')
-                // 修改 offset 位置
+        // 修改 offset 位置
                 range.setEnd(range.endContainer, range.endOffset + 1)
-                // 存储
+        // 存储
                 this.saveRange(range)
             } else {
                 $elem = $('<strong>&#8203;</strong>')
@@ -158,15 +158,15 @@ API.prototype = {
                 this.createRangeByElem($elem, true)
             }
         } catch (ex) {
-            // 部分情况下会报错，兼容一下
+      // 部分情况下会报错，兼容一下
         }
     },
 
-    // 根据 $Elem 设置选区
-    createRangeByElem: function ($elem, toStart, isContent) {
-        // $elem - 经过封装的 elem
-        // toStart - true 开始位置，false 结束位置
-        // isContent - 是否选中Elem的内容
+  // 根据 $Elem 设置选区
+    createRangeByElem ($elem, toStart, isContent) {
+    // $elem - 经过封装的 elem
+    // toStart - true 开始位置，false 结束位置
+    // isContent - 是否选中Elem的内容
         if (!$elem.length) {
             return
         }
@@ -184,7 +184,7 @@ API.prototype = {
             range.collapse(toStart)
         }
 
-        // 存储 range
+    // 存储 range
         this.saveRange(range)
     }
 }

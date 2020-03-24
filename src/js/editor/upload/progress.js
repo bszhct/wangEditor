@@ -4,7 +4,7 @@
 
 import $ from '../../util/dom-core.js'
 
-function Progress(editor) {
+function Progress (editor) {
     this.editor = editor
     this._time = 0
     this._isShow = false
@@ -18,13 +18,13 @@ Progress.prototype = {
     constructor: Progress,
 
     show: function (progress) {
-        // 状态处理
+    // 状态处理
         if (this._isShow) {
             return
         }
         this._isShow = true
 
-        // 渲染
+    // 渲染
         const $bar = this.$bar
         if (!this._isRender) {
             const $textContainer = this.$textContainer
@@ -33,7 +33,7 @@ Progress.prototype = {
             this._isRender = true
         }
 
-        // 改变进度（节流，100ms 渲染一次）
+    // 改变进度（节流，100ms 渲染一次）
         if (Date.now() - this._time > 100) {
             if (progress <= 1) {
                 $bar.css('width', progress * 100 + '%')
@@ -41,7 +41,7 @@ Progress.prototype = {
             }
         }
 
-        // 隐藏
+    // 隐藏
         let timeoutId = this._timeoutId
         if (timeoutId) {
             clearTimeout(timeoutId)
@@ -55,7 +55,7 @@ Progress.prototype = {
         const $bar = this.$bar
         $bar.remove()
 
-        // 修改状态
+    // 修改状态
         this._time = 0
         this._isShow = false
         this._isRender = false

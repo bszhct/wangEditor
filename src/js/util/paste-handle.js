@@ -2,12 +2,11 @@
     粘贴信息的处理
 */
 
-import $ from './dom-core.js'
-import { replaceHtmlSymbol } from './util.js'
-import { objForEach } from './util.js'
+// import $ from './dom-core.js'
+import { replaceHtmlSymbol, objForEach } from './util.js'
 
 // 获取粘贴的纯文本
-export function getPasteText(e) {
+export function getPasteText (e) {
     const clipboardData = e.clipboardData || (e.originalEvent && e.originalEvent.clipboardData)
     let pasteText
     if (clipboardData == null) {
@@ -20,7 +19,7 @@ export function getPasteText(e) {
 }
 
 // 获取粘贴的html
-export function getPasteHtml(e, filterStyle, ignoreImg) {
+export function getPasteHtml (e, filterStyle, ignoreImg) {
     const clipboardData = e.clipboardData || (e.originalEvent && e.originalEvent.clipboardData)
     let pasteText, pasteHtml
     if (clipboardData == null) {
@@ -36,29 +35,29 @@ export function getPasteHtml(e, filterStyle, ignoreImg) {
         return
     }
 
-    // 过滤word中状态过来的无用字符
+  // 过滤word中状态过来的无用字符
     const docSplitHtml = pasteHtml.split('</html>')
     if (docSplitHtml.length === 2) {
         pasteHtml = docSplitHtml[0]
     }
 
-    // 过滤无用标签
+  // 过滤无用标签
     pasteHtml = pasteHtml.replace(/<(meta|script|link).+?>/igm, '')
-    // 去掉注释
+  // 去掉注释
     pasteHtml = pasteHtml.replace(/<!--.*?-->/mg, '')
-    // 过滤 data-xxx 属性
+  // 过滤 data-xxx 属性
     pasteHtml = pasteHtml.replace(/\s?data-.+?=('|").+?('|")/igm, '')
 
     if (ignoreImg) {
-        // 忽略图片
+    // 忽略图片
         pasteHtml = pasteHtml.replace(/<img.+?>/igm, '')
     }
 
     if (filterStyle) {
-        // 过滤样式
+    // 过滤样式
         pasteHtml = pasteHtml.replace(/\s?(class|style)=('|").*?('|")/igm, '')
     } else {
-        // 保留样式
+    // 保留样式
         pasteHtml = pasteHtml.replace(/\s?class=('|").*?('|")/igm, '')
     }
 
@@ -66,11 +65,11 @@ export function getPasteHtml(e, filterStyle, ignoreImg) {
 }
 
 // 获取粘贴的图片文件
-export function getPasteImgs(e) {
+export function getPasteImgs (e) {
     const result = []
     const txt = getPasteText(e)
     if (txt) {
-        // 有文字，就忽略图片
+    // 有文字，就忽略图片
         return result
     }
 

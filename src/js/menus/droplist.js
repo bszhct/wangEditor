@@ -4,22 +4,22 @@
 import $ from '../util/dom-core.js'
 import replaceLang from '../util/replace-lang.js'
 
-const _emptyFn = () => {}
+const _emptyFn = () => { }
 
 // 构造函数
-function DropList(menu, opt) {
-    // droplist 所依附的菜单
+function DropList (menu, opt) {
+  // droplist 所依附的菜单
     const editor = menu.editor
     this.menu = menu
     this.opt = opt
-    // 容器
+  // 容器
     const $container = $('<div class="w-e-droplist"></div>')
 
-    // 标题
+  // 标题
     const $title = opt.$title
     let titleHtml
     if ($title) {
-        // 替换多语言
+    // 替换多语言
         titleHtml = $title.html()
         titleHtml = replaceLang(editor, titleHtml)
         $title.html(titleHtml)
@@ -29,29 +29,33 @@ function DropList(menu, opt) {
     }
 
     const list = opt.list || []
-    const type = opt.type || 'list'  // 'list' 列表形式（如“标题”菜单） / 'inline-block' 块状形式（如“颜色”菜单）
+    const type = opt.type || 'list' // 'list' 列表形式（如“标题”菜单） / 'inline-block' 块状形式（如“颜色”菜单）
     const onClick = opt.onClick || _emptyFn
 
-    // 加入 DOM 并绑定事件
-    const $list = $('<ul class="' + (type === 'list' ? 'w-e-list' : 'w-e-block') + '"></ul>')
+  // 加入 DOM 并绑定事件
+    const $list = $(`<ul class="${type === 'list' ? 'w-e-list' : 'w-e-block'}"></ul>`)
     $container.append($list)
-    list.forEach(item => {
+    list.forEach((item) => {
         const $elem = item.$elem
 
-        // 替换多语言
+    // 替换多语言
         let elemHtml = $elem.html()
         elemHtml = replaceLang(editor, elemHtml)
         $elem.html(elemHtml)
 
         const value = item.value
-        const $li = $('<li class="w-e-item"></li>')
+        const title = item.title
+        let $li = $('<li class="w-e-item"></li>')
+        if (title) {
+            $li = $(`<li class="w-e-item omit" title="${title}"></li>`)
+        }
         if ($elem) {
             $li.append($elem)
             $list.append($li)
-            $li.on('click', e => {
+            $li.on('click', (e) => {
                 onClick(value)
 
-                // 隐藏
+        // 隐藏
                 this.hideTimeoutId = setTimeout(() => {
                     this.hide()
                 }, 0)
@@ -59,17 +63,17 @@ function DropList(menu, opt) {
         }
     })
 
-    // 绑定隐藏事件
-    $container.on('mouseleave', e => {
+  // 绑定隐藏事件
+    $container.on('mouseleave', (e) => {
         this.hideTimeoutId = setTimeout(() => {
             this.hide()
         }, 0)
     })
 
-    // 记录属性
+  // 记录属性
     this.$container = $container
 
-    // 基本属性
+  // 基本属性
     this._rendered = false
     this._show = false
 }
@@ -78,10 +82,10 @@ function DropList(menu, opt) {
 DropList.prototype = {
     constructor: DropList,
 
-    // 显示（插入DOM）
-    show: function () {
+  // 显示（插入DOM）
+    show () {
         if (this.hideTimeoutId) {
-            // 清除之前的定时隐藏
+      // 清除之前的定时隐藏
             clearTimeout(this.hideTimeoutId)
         }
 
@@ -92,28 +96,28 @@ DropList.prototype = {
             return
         }
         if (this._rendered) {
-            // 显示
+      // 显示
             $container.show()
         } else {
-            // 加入 DOM 之前先定位位置
+      // 加入 DOM 之前先定位位置
             const menuHeight = $menuELem.getSizeData().height || 0
-            const width = this.opt.width || 100  // 默认为 100
-            $container.css('margin-top', menuHeight + 'px')
-                    .css('width', width + 'px')
+            const width = this.opt.width || 60 // 默认为 60
+            $container.css('margin-top', `${menuHeight}px`)
+        .css('width', `${width}px`)
 
-            // 加入到 DOM
+      // 加入到 DOM
             $menuELem.append($container)
             this._rendered = true
         }
 
-        // 修改属性
+    // 修改属性
         this._show = true
     },
 
-    // 隐藏（移除DOM）
-    hide: function () {
+  // 隐藏（移除DOM）
+    hide () {
         if (this.showTimeoutId) {
-            // 清除之前的定时显示
+      // 清除之前的定时显示
             clearTimeout(this.showTimeoutId)
         }
 
@@ -121,7 +125,7 @@ DropList.prototype = {
         if (!this._show) {
             return
         }
-        // 隐藏并需改属性
+    // 隐藏并需改属性
         $container.hide()
         this._show = false
     }
